@@ -163,13 +163,13 @@ class InterpolateRegExMatch(_InterpolateBase):
 	"""
 
 	# pylint: disable=arguments-differ
-	def _make_value_fetch_callable(self, match_obj, text_map):
+	def _make_value_fetch_callable(self, match_obj, text_map=None):
 		def f(rule_type, rule_value):
 			if rule_type == 1:
 				return str(match_obj.group(rule_value))
 			if text_map:
 				return text_map[rule_value]
-			return None
+			raise KeyError("cannot reach value for key: " + repr(rule_value))
 
 		return f
 
