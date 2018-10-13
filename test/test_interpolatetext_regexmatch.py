@@ -8,6 +8,11 @@ from commonutil_template.interpolatetext import InterpolateRegExMatch
 
 
 class TestInterpolateRegExMatch_1_SafeOff(unittest.TestCase):
+	"""
+	Test with apply both RegEx match object and text map while turned
+	safe_mode off.
+	"""
+
 	def setUp(self):
 		self.inst = InterpolateRegExMatch.parse_template("abc${1}/d ${2}: <${KEY}> =${VAL}${3}", False)
 
@@ -51,6 +56,11 @@ class TestInterpolateRegExMatch_1_SafeOff(unittest.TestCase):
 
 
 class TestInterpolateRegExMatch_1_SafeOn(unittest.TestCase):
+	"""
+	Test with apply both RegEx match object and text map while turned
+	safe_mode on.
+	"""
+
 	def setUp(self):
 		self.inst = InterpolateRegExMatch.parse_template("abc${1}/d ${2}: <${KEY}> =${VAL}${3}", True)
 
@@ -91,3 +101,27 @@ class TestInterpolateRegExMatch_1_SafeOn(unittest.TestCase):
 		}
 		result = self.inst.apply(m, t)
 		self.assertEqual(result, "abc312/d zyxabc: <${KEY}> ==val1=ZYXABC")
+
+
+class TestInterpolateRegExMatch_2_SafeOff(unittest.TestCase):
+	"""
+	Test with apply RegEx match object only while turned safe_mode off.
+	"""
+
+	def setUp(self):
+		self.inst = InterpolateRegExMatch.parse_template("abc${1}/d ${2}: <$> =${3}", False)
+
+	def tearDown(self):
+		self.inst = None
+
+	def test_data_1(self):
+		trap = re.compile(">([0-9]+),([a-z]+),([A-Z]+).")
+		m = trap.match(">312,zyxabc,ZYXABC.")
+		result = self.inst.apply(m)
+		self.assertEqual(result, "abc312/d zyxabc: <$> =ZYXABC")
+
+	def test_miss_regexgroup_1(self):
+		with self.assertRaises(IndexError):
+			trap = re.compile(">([0-9]+),([a-z]+).")
+			m = trap.match(">312,zyxabc.")
+			self.inst.apply(m)
