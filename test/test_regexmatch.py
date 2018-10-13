@@ -4,7 +4,7 @@
 import unittest
 import re
 
-from commonutil_template.interpolatetext.regexmatch import InterpolateRegExMatch
+from commonutil_interpolatetext.regexmatch import InterpolateRegExMatch
 
 
 class TestInterpolateRegExMatch_1_SafeOff(unittest.TestCase):

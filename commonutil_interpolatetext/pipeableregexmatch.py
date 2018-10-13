@@ -3,7 +3,7 @@
 
 import logging
 
-from commonutil_template.interpolatetext._base import _InterpolateBase
+from commonutil_interpolatetext._base import _InterpolateBase
 
 _log = logging.getLogger(__name__)
 

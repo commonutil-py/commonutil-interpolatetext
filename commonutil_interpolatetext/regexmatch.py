@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """ RegExMatch Interpolate Text template engine """
 
-from commonutil_template.interpolatetext._base import _InterpolateBase
+from commonutil_interpolatetext._base import _InterpolateBase
 
 
 class InterpolateRegExMatch(_InterpolateBase):
