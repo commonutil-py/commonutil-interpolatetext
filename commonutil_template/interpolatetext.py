@@ -110,12 +110,13 @@ class _InterpolateBase(object):
 		raise NotImplementedError("derived class should implement _stringize_rule()")
 
 	@classmethod
-	def _parse_rule(cls, rule_text):
+	def _parse_rule(cls, rule_text, **kwds):
 		"""
 		Parse interpolate rule.
 
 		Args:
 			rule_text - Rule text in string.
+			**kwds - Extra arguments for implementation.
 
 		Return:
 			A tuple in (rule_type, rule_value) form.
@@ -123,13 +124,14 @@ class _InterpolateBase(object):
 		raise NotImplementedError("derived class should implement _parse_rule()")
 
 	@classmethod
-	def parse_template(cls, template_text, safe_mode=False):
+	def parse_template(cls, template_text, safe_mode=False, **kwds):
 		"""
 		Parse template into interpolate instance.
 
 		Args:
 			template_text - Template string
 			safe_mode=False - If safe_mode is True failed interpolation will replace with rule text instead of raising exception.
+			**kwds - Extra parameters for implementation.
 
 		Return:
 			Interpolate instance.
@@ -144,7 +146,7 @@ class _InterpolateBase(object):
 			if spns > lidx:
 				aux = (0, template_text[lidx:spns])
 				result.append(aux)
-			aux = cls._parse_rule(m.group(1))
+			aux = cls._parse_rule(m.group(1), **kwds)
 			result.append(aux)
 			lidx = spne
 			m = _INTERPOLATE_TRAP.search(template_text, lidx)
