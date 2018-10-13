@@ -11,7 +11,6 @@
 build
 update.sh
 lib/__init__.py
-test/**
 rt-sandbox/**
 .rt-deps/**
 *.egg-info/**
