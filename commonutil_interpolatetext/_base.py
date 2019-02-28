@@ -9,9 +9,9 @@ _log = logging.getLogger(__name__)
 _INTERPOLATE_TRAP = re.compile(r'\$\{([^\{\}\$]+)\}')
 
 
-class _InterpolateBase(object):
+class _InterpolateBase:
 	def __init__(self, rule_object, safe_mode, *args, **kwds):
-		super(_InterpolateBase, self).__init__(*args, **kwds)
+		super().__init__(*args, **kwds)
 		self.rules = None
 		self.content = None
 		if isinstance(rule_object, tuple):
@@ -89,7 +89,7 @@ class _InterpolateBase(object):
 			v = self._fetch_value(rule_t, rule_v, g)
 			if not v:
 				continue
-			if not isinstance(v, basestring):
+			if not isinstance(v, str):
 				v = self._stringize_value(v)
 				if not v:
 					continue
@@ -136,7 +136,7 @@ class _InterpolateBase(object):
 		Return:
 			Interpolate instance.
 		"""
-		if not isinstance(template_text, basestring):
+		if not isinstance(template_text, str):
 			template_text = str(template_text)
 		result = []
 		m = _INTERPOLATE_TRAP.search(template_text)
