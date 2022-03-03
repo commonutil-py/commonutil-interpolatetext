@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
 		name="commonutil-interpolatetext",
-		version="3.0.1",  # REV-CONSTANT:rev 5d022db7d38f580a850cd995e26a6c2f
+		version="3.0.2",  # REV-CONSTANT:rev 5d022db7d38f580a850cd995e26a6c2f
 		description="Interpolate text template engine",
 		packages=[
 				"commonutil_interpolatetext",
