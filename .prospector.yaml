@@ -8,6 +8,8 @@ ignore-paths:
 pylint:
   disable:
     - keyword-arg-before-vararg
+  options:
+    indent-string: "\t"
 
 pep8:
   disable:
