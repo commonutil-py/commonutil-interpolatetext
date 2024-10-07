@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "commonutil-interpolatetext"
+version = "3.0.2"	# REV-CONSTANT:rev 5d022db7d38f580a850cd995e26a6c2f
+description = "Interpolate text template engine"
+readme = "README.md"
+requires-python = ">= 3.7"
+classifiers = [
+	"Development Status :: 5 - Production/Stable",
+	"Intended Audience :: Developers",
+	"License :: OSI Approved :: MIT License",
+	"Operating System :: POSIX",
+]
+
+[tool.setuptools.packages.find]
+include = ["commonutil_interpolatetext*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+"*" = ["py.typed", "*.pyi"]

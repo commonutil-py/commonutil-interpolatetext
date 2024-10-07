@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Unit test for InterpolateText engines """
+"""Unit test for InterpolateText engines"""
 
 import unittest
 import re
@@ -14,7 +14,9 @@ class TestInterpolateRegExMatch_1_SafeOff(unittest.TestCase):
 	"""
 
 	def setUp(self):
-		self.inst = InterpolateRegExMatch.parse_template("abc${1}/d ${2}: <${KEY}> =${VAL}${3}", False)
+		self.inst = InterpolateRegExMatch.parse_template(
+			"abc${1}/d ${2}: <${KEY}> =${VAL}${3}", False
+		)
 
 	def tearDown(self):
 		self.inst = None
@@ -23,8 +25,8 @@ class TestInterpolateRegExMatch_1_SafeOff(unittest.TestCase):
 		trap = re.compile(">([0-9]+),([a-z]+),([A-Z]+).")
 		m = trap.match(">312,zyxabc,ZYXABC.")
 		t = {
-				"KEY": "-key1-",
-				"VAL": "=val1=",
+			"KEY": "-key1-",
+			"VAL": "=val1=",
 		}
 		result = self.inst.apply(m, t)
 		self.assertEqual(result, "abc312/d zyxabc: <-key1-> ==val1=ZYXABC")
@@ -34,8 +36,8 @@ class TestInterpolateRegExMatch_1_SafeOff(unittest.TestCase):
 			trap = re.compile(">([0-9]+),([a-z]+).")
 			m = trap.match(">312,zyxabc.")
 			t = {
-					"KEY": "-key1-",
-					"VAL": "=val1=",
+				"KEY": "-key1-",
+				"VAL": "=val1=",
 			}
 			self.inst.apply(m, t)
 
@@ -50,7 +52,7 @@ class TestInterpolateRegExMatch_1_SafeOff(unittest.TestCase):
 			trap = re.compile(">([0-9]+),([a-z]+),([A-Z]+).")
 			m = trap.match(">312,zyxabc,ZYXABC.")
 			t = {
-					"VAL": "=val1=",
+				"VAL": "=val1=",
 			}
 			self.inst.apply(m, t)
 
@@ -62,7 +64,9 @@ class TestInterpolateRegExMatch_1_SafeOn(unittest.TestCase):
 	"""
 
 	def setUp(self):
-		self.inst = InterpolateRegExMatch.parse_template("abc${1}/d ${2}: <${KEY}> =${VAL}${3}", True)
+		self.inst = InterpolateRegExMatch.parse_template(
+			"abc${1}/d ${2}: <${KEY}> =${VAL}${3}", True
+		)
 
 	def tearDown(self):
 		self.inst = None
@@ -71,8 +75,8 @@ class TestInterpolateRegExMatch_1_SafeOn(unittest.TestCase):
 		trap = re.compile(">([0-9]+),([a-z]+),([A-Z]+).")
 		m = trap.match(">312,zyxabc,ZYXABC.")
 		t = {
-				"KEY": "-key1-",
-				"VAL": "=val1=",
+			"KEY": "-key1-",
+			"VAL": "=val1=",
 		}
 		result = self.inst.apply(m, t)
 		self.assertEqual(result, "abc312/d zyxabc: <-key1-> ==val1=ZYXABC")
@@ -81,8 +85,8 @@ class TestInterpolateRegExMatch_1_SafeOn(unittest.TestCase):
 		trap = re.compile(">([0-9]+),([a-z]+).")
 		m = trap.match(">312,zyxabc.")
 		t = {
-				"KEY": "-key1-",
-				"VAL": "=val1=",
+			"KEY": "-key1-",
+			"VAL": "=val1=",
 		}
 		result = self.inst.apply(m, t)
 		self.assertEqual(result, "abc312/d zyxabc: <-key1-> ==val1=${3}")
@@ -97,7 +101,7 @@ class TestInterpolateRegExMatch_1_SafeOn(unittest.TestCase):
 		trap = re.compile(">([0-9]+),([a-z]+),([A-Z]+).")
 		m = trap.match(">312,zyxabc,ZYXABC.")
 		t = {
-				"VAL": "=val1=",
+			"VAL": "=val1=",
 		}
 		result = self.inst.apply(m, t)
 		self.assertEqual(result, "abc312/d zyxabc: <${KEY}> ==val1=ZYXABC")
@@ -109,7 +113,9 @@ class TestInterpolateRegExMatch_2_SafeOff(unittest.TestCase):
 	"""
 
 	def setUp(self):
-		self.inst = InterpolateRegExMatch.parse_template("abc${1}/d ${2}: <$> =${3}", False)
+		self.inst = InterpolateRegExMatch.parse_template(
+			"abc${1}/d ${2}: <$> =${3}", False
+		)
 
 	def tearDown(self):
 		self.inst = None

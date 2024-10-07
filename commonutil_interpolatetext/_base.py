@@ -1,19 +1,28 @@
 # -*- coding: utf-8 -*-
-""" Shared logic between Interpolate Text template engine """
+"""Shared logic between Interpolate Text template engine"""
 
+from __future__ import annotations
+
+from typing import Any, Optional, Tuple, Union
 import re
 import logging
 
 _log = logging.getLogger(__name__)
 
-_INTERPOLATE_TRAP = re.compile(r'\$\{([^\{\}\$]+)\}')
+_INTERPOLATE_TRAP = re.compile(r"\$\{([^\{\}\$]+)\}")
 
 
 class _InterpolateBase:
-	def __init__(self, rule_object, safe_mode, *args, **kwds):
+	__slots__ = (
+		"rules",
+		"content",
+		"safe_mode",
+	)
+
+	def __init__(self, rule_object: Union[tuple, str], safe_mode: bool, *args, **kwds):
 		super().__init__(*args, **kwds)
 		self.rules = None
-		self.content = None
+		self.content = ""
 		if isinstance(rule_object, tuple):
 			self.rules = rule_object
 		else:
@@ -30,9 +39,11 @@ class _InterpolateBase:
 		Return:
 			Callable with prototype (rule_type, rule_value) => result_value.
 		"""
-		raise NotImplementedError("derived class should implement _make_value_fetch_callable()")
+		raise NotImplementedError(
+			"derived class should implement _make_value_fetch_callable()"
+		)
 
-	def _stringize_value(self, v):
+	def _stringize_value(self, v) -> Optional[str]:
 		"""
 		Convert given value to string.
 
@@ -57,18 +68,19 @@ class _InterpolateBase:
 		return None
 
 	def _fetch_value(self, rule_type, rule_value, fetch_callable):
-		""" (internal)
-		"""
+		"""(internal)"""
 		if self.safe_mode:
 			try:
 				return fetch_callable(rule_type, rule_value)
 			except Exception:
-				_log.exception("failed on fetching value for rule: (%r, %r)", rule_type, rule_value)
+				_log.exception(
+					"failed on fetching value for rule: (%r, %r)", rule_type, rule_value
+				)
 			rule_text = self._stringize_rule(rule_type, rule_value)
 			return "${" + rule_text + "}"
 		return fetch_callable(rule_type, rule_value)
 
-	def apply(self, *args, **kwds):
+	def apply(self, *args, **kwds) -> str:
 		"""
 		Apply value to interpolation text.
 
@@ -94,10 +106,10 @@ class _InterpolateBase:
 				if not v:
 					continue
 			f.append(v)
-		return ''.join(f)
+		return "".join(f)
 
 	@classmethod
-	def _stringize_rule(cls, rule_type, rule_value):
+	def _stringize_rule(cls, rule_type: int, rule_value: Any) -> str:
 		"""
 		Convert interpolate rule into string.
 
@@ -110,7 +122,7 @@ class _InterpolateBase:
 		raise NotImplementedError("derived class should implement _stringize_rule()")
 
 	@classmethod
-	def _parse_rule(cls, rule_text, **kwds):
+	def _parse_rule(cls, rule_text: str, **kwds) -> Tuple[int, Any]:
 		"""
 		Parse interpolate rule.
 
@@ -124,7 +136,7 @@ class _InterpolateBase:
 		raise NotImplementedError("derived class should implement _parse_rule()")
 
 	@classmethod
-	def parse_template(cls, template_text, safe_mode=False, **kwds):
+	def parse_template(cls, template_text: str, safe_mode: bool = False, **kwds):
 		"""
 		Parse template into interpolate instance.
 
@@ -144,16 +156,14 @@ class _InterpolateBase:
 		while m:
 			spns, spne = m.span(0)
 			if spns > lidx:
-				aux = (0, template_text[lidx:spns])
-				result.append(aux)
-			aux = cls._parse_rule(m.group(1), **kwds)
-			result.append(aux)
+				result.append((0, template_text[lidx:spns]))
+			aux0 = cls._parse_rule(m.group(1), **kwds)
+			result.append(aux0)
 			lidx = spne
 			m = _INTERPOLATE_TRAP.search(template_text, lidx)
 		if not result:
 			return cls(template_text, safe_mode)
-		aux = template_text[lidx:]
-		if aux:
-			aux = (0, aux)
-			result.append(aux)
+		aux1 = template_text[lidx:]
+		if aux1:
+			result.append((0, aux1))
 		return cls(tuple(result), safe_mode)

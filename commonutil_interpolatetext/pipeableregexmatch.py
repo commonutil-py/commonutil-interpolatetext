@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-""" PipeableRegExMatch Interpolate Text template engine """
+"""PipeableRegExMatch Interpolate Text template engine"""
+
+from __future__ import annotations
 
 import logging
 
@@ -45,7 +47,9 @@ class InterpolatePipeableRegExMatch(_InterpolateBase):
 	def _stringize_pipe_callable_cmd(cls, pipe_callable):
 		c_args = cls._fetch_pipe_callable_args(pipe_callable)
 		if not c_args:
-			_log.error("have empty arguments on stringize pipe callable: %r", pipe_callable)
+			_log.error(
+				"have empty arguments on stringize pipe callable: %r", pipe_callable
+			)
 			return None
 		return ",".join(c_args)
 
@@ -53,7 +57,7 @@ class InterpolatePipeableRegExMatch(_InterpolateBase):
 	def _stringize_rule(cls, rule_type, rule_value):
 		source_key, pipe_callables = rule_value
 		rule_parts = [
-				str(source_key),
+			str(source_key),
 		]
 		if pipe_callables:
 			for c in pipe_callables:

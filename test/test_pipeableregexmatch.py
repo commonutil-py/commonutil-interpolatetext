@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Unit test for InterpolateText engines """
+"""Unit test for InterpolateText engines"""
 
 import unittest
 import re
@@ -13,13 +13,13 @@ class MockPipeCallable_Prefix(object):
 
 	def get_args(self):
 		result = [
-				"prefix",
+			"prefix",
 		]
 		result.extend(self.args)
 		return result
 
 	def __call__(self, v):
-		a = (v, ) + self.args
+		a = (v,) + self.args
 		return "/".join(a)
 
 
@@ -35,7 +35,7 @@ def mock_pipe_callable_builder_1(pipe_type, *args):
 
 		def f(v):
 			if v is None:
-				return ("reverse", )
+				return ("reverse",)
 			return v[::-1]
 	elif pipe_type == "prefix":
 		return MockPipeCallable_Prefix(args)
@@ -52,7 +52,10 @@ class TestInterpolatePipeableRegExMatch_1_SafeOff(unittest.TestCase):
 
 	def setUp(self):
 		self.inst = InterpolatePipeableRegExMatch.parse_template(
-				"abc${1}/d ${2:join,-}: <${KEY:reverse:join,*}> =${VAL}${3}", False, pipe_callable_builder=mock_pipe_callable_builder_1)
+			"abc${1}/d ${2:join,-}: <${KEY:reverse:join,*}> =${VAL}${3}",
+			False,
+			pipe_callable_builder=mock_pipe_callable_builder_1,
+		)
 
 	def tearDown(self):
 		self.inst = None
@@ -61,8 +64,8 @@ class TestInterpolatePipeableRegExMatch_1_SafeOff(unittest.TestCase):
 		trap = re.compile(">([0-9]+),([a-z]+),([A-Z]+).")
 		m = trap.match(">312,zyxabc,ZYXABC.")
 		t = {
-				"KEY": "qwerty",
-				"VAL": "=val1=",
+			"KEY": "qwerty",
+			"VAL": "=val1=",
 		}
 		result = self.inst.apply(m, t)
 		self.assertEqual(result, "abc312/d z-y-x-a-b-c: <y*t*r*e*w*q> ==val1=ZYXABC")
@@ -72,8 +75,8 @@ class TestInterpolatePipeableRegExMatch_1_SafeOff(unittest.TestCase):
 			trap = re.compile(">([0-9]+),([a-z]+).")
 			m = trap.match(">312,zyxabc.")
 			t = {
-					"KEY": "qwerty",
-					"VAL": "=val1=",
+				"KEY": "qwerty",
+				"VAL": "=val1=",
 			}
 			self.inst.apply(m, t)
 
@@ -88,7 +91,7 @@ class TestInterpolatePipeableRegExMatch_1_SafeOff(unittest.TestCase):
 			trap = re.compile(">([0-9]+),([a-z]+),([A-Z]+).")
 			m = trap.match(">312,zyxabc,ZYXABC.")
 			t = {
-					"VAL": "qwerty",
+				"VAL": "qwerty",
 			}
 			self.inst.apply(m, t)
 
@@ -101,7 +104,10 @@ class TestInterpolatePipeableRegExMatch_1_SafeOn(unittest.TestCase):
 
 	def setUp(self):
 		self.inst = InterpolatePipeableRegExMatch.parse_template(
-				"abc${1}/d ${2:join,-}: <${KEY:reverse:join,*}> =${VAL:prefix,www,O_o,D*}${3}", True, pipe_callable_builder=mock_pipe_callable_builder_1)
+			"abc${1}/d ${2:join,-}: <${KEY:reverse:join,*}> =${VAL:prefix,www,O_o,D*}${3}",
+			True,
+			pipe_callable_builder=mock_pipe_callable_builder_1,
+		)
 
 	def tearDown(self):
 		self.inst = None
@@ -110,36 +116,46 @@ class TestInterpolatePipeableRegExMatch_1_SafeOn(unittest.TestCase):
 		trap = re.compile(">([0-9]+),([a-z]+),([A-Z]+).")
 		m = trap.match(">312,zyxabc,ZYXABC.")
 		t = {
-				"KEY": "qwerty",
-				"VAL": "=val1=",
+			"KEY": "qwerty",
+			"VAL": "=val1=",
 		}
 		result = self.inst.apply(m, t)
-		self.assertEqual(result, "abc312/d z-y-x-a-b-c: <y*t*r*e*w*q> ==val1=/www/O_o/D*ZYXABC")
+		self.assertEqual(
+			result, "abc312/d z-y-x-a-b-c: <y*t*r*e*w*q> ==val1=/www/O_o/D*ZYXABC"
+		)
 
 	def test_miss_regexgroup_1(self):
 		trap = re.compile(">([0-9]+),([a-z]+).")
 		m = trap.match(">312,zyxabc.")
 		t = {
-				"KEY": "qwerty",
-				"VAL": "=val1=",
+			"KEY": "qwerty",
+			"VAL": "=val1=",
 		}
 		result = self.inst.apply(m, t)
-		self.assertEqual(result, "abc312/d z-y-x-a-b-c: <y*t*r*e*w*q> ==val1=/www/O_o/D*${3}")
+		self.assertEqual(
+			result, "abc312/d z-y-x-a-b-c: <y*t*r*e*w*q> ==val1=/www/O_o/D*${3}"
+		)
 
 	def test_miss_textmap_1(self):
 		trap = re.compile(">([0-9]+),([a-z]+),([A-Z]+).")
 		m = trap.match(">312,zyxabc,ZYXABC.")
 		result = self.inst.apply(m)
-		self.assertEqual(result, "abc312/d z-y-x-a-b-c: <${KEY:reverse:join,*}> =${VAL:prefix,www,O_o,D*}ZYXABC")
+		self.assertEqual(
+			result,
+			"abc312/d z-y-x-a-b-c: <${KEY:reverse:join,*}> =${VAL:prefix,www,O_o,D*}ZYXABC",
+		)
 
 	def test_miss_textkey_1(self):
 		trap = re.compile(">([0-9]+),([a-z]+),([A-Z]+).")
 		m = trap.match(">312,zyxabc,ZYXABC.")
 		t = {
-				"VAL": "=val1=",
+			"VAL": "=val1=",
 		}
 		result = self.inst.apply(m, t)
-		self.assertEqual(result, "abc312/d z-y-x-a-b-c: <${KEY:reverse:join,*}> ==val1=/www/O_o/D*ZYXABC")
+		self.assertEqual(
+			result,
+			"abc312/d z-y-x-a-b-c: <${KEY:reverse:join,*}> ==val1=/www/O_o/D*ZYXABC",
+		)
 
 
 class TestInterpolatePipeableRegExMatch_2_SafeOff(unittest.TestCase):
@@ -149,7 +165,10 @@ class TestInterpolatePipeableRegExMatch_2_SafeOff(unittest.TestCase):
 
 	def setUp(self):
 		self.inst = InterpolatePipeableRegExMatch.parse_template(
-				"abc${1}/d ${2}: <$> =${3:join,#:prefix,www,O_o:reverse}", False, pipe_callable_builder=mock_pipe_callable_builder_1)
+			"abc${1}/d ${2}: <$> =${3:join,#:prefix,www,O_o:reverse}",
+			False,
+			pipe_callable_builder=mock_pipe_callable_builder_1,
+		)
 
 	def tearDown(self):
 		self.inst = None

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-""" RegExMatch Interpolate Text template engine """
+"""RegExMatch Interpolate Text template engine"""
+
+from __future__ import annotations
 
 from commonutil_interpolatetext._base import _InterpolateBase
 
