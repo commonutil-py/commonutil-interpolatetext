@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "commonutil-interpolatetext"
-version = "3.0.2"	# REV-CONSTANT:rev 5d022db7d38f580a850cd995e26a6c2f
+version = "3.0.3"	# REV-CONSTANT:rev 5d022db7d38f580a850cd995e26a6c2f
 description = "Interpolate text template engine"
 readme = "README.md"
 requires-python = ">= 3.7"
